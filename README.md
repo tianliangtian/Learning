@@ -1,2 +1,2 @@
 # Learning
-a simple repo for some learning resources
+A simple repo for some learning resources.
