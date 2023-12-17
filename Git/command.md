@@ -24,6 +24,34 @@ $ git add [file1] [file2] ...     //添加指定文件
 $ git add [dir]                   //添加指定目录
 $ git add .                       //添加当前目录下所有文件
 ```
+`git commit` 将暂存区的内容提交到本地仓库
+提交时的message是必须的，可以使用 `-m` 参数在命令后面直接添加，否则会打开默认编辑器添加
+```git
+$ git commit -m [message] 
+$ git commit [file1] [file2] ... -m [message] //可以只提交指定文件
+$ git commit -a                               // -a 参数可以不add直接提交 
+```
+`git reset` 将暂存区回退到某一次提交的版本
+```git
+$ git reset [--soft | --mixed | --hard] [commit]
+$ git reset --hard [commit]       //将暂存区和工作区的内容都重置到commit状态
+```
+`git restore` 恢复或撤销文件的更改
+```git
+$ git restore <file>            //将指定文件恢复到最新的提交状态
+$ git restore --staged <file>   //仅恢复暂存区的文件，不影响工作区
+```
+`git revert`
+```git 
+$ git revert <commit>   //生成一个新的commit节点，新节点与指定节点一样
+```
+`git mv` 移动或重命名
+`git rm` 从暂存区和工作区删除文件
+```git
+$ git rm <file>           
+$ git rm --cached <file>  // 仅删除暂存区
+```
+### 状态查看
 `git status` 查看Git仓库当前状态，显示以下信息：
 * 当前分支的名称
 * 当前分支与远程分支的关系（例如，是否是最新的）
@@ -59,17 +87,29 @@ $ git diff [file]               //
 $ git diff --cached [file]      //显示暂存区与上一次提交的差异
 $ git diff [commit1] [commit2]  //显示两次提交的差异
 ```
-`git commit` 将暂存区的内容提交到本地仓库
-提交时的message是必须的，可以使用 `-m` 参数在命令后面直接添加，否则会打开默认编辑器添加
+`git log` 查看历史提交记录，`--help` 查看帮助
+`git blame` 逐行显示指定文件的具体修改
+### 分支
+几乎每一种版本控制系统都以某种形式支持分支，一个分支代表一条独立的开发线。
+使用分支意味着你可以从开发主线上分离开来，然后在不影响主线的同时继续工作。
+`git branch` 
 ```git
-$ git commit -m [message] 
-$ git commit [file1] [file2] ... -m [message] //可以只提交指定文件
-$ git commit -a                               // -a 参数可以不add直接提交 
+$ git branch                  //列出分支
+$ git branch [branchname]     //创建分支
+$ git branch -d [branchname]  //删除分支
 ```
-`git reset` 将暂存区回退到某一次提交的版本
+`git switch` 切换分支
 ```git
-$ git reset [--soft | --mixed | --hard] [HEAD] [file]
-$ git reset HEAD^
+$ git switch [branchname]
+```
+`git merge` 合并分支
+```git
+$ git merge [branchname]    //将该分支合并到当前分支
+```
+`git checkout` 可以切换到分支(建议switch)或特定提交
+以下指令将头指针切换到commit，此时进入"detached HEAD"状态，只能查看历史记录而不能进行分支操作，不建议在分离头指针状态下工作，因为更改可能会丢失。
+```git
+$ git checkout [commit]     
 ```
 ## 远程操作
 ### remote
