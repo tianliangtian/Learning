@@ -69,6 +69,7 @@ marker|description|marker|description
 `"s"`|正方形|`"p"`|五边形
 `"*"`|星号|`"+"`|加号
 `"x"`|乘号|`"None"`|无
+
 可以自定义标记的大小与颜色，使用的参数分别是：
 * markersize，简写为 `ms`：定义标记的大小
 * markerfacecolor，简写为 `mfc`：定义标记内部的颜色
@@ -108,4 +109,51 @@ marker|description|marker|description
 `'b'`|蓝|`'c'`|青
 `'m'`|品红|`'y'`|黄
 `'k'`|黑|`'w'`|白
+#### 绘图线
+线的类型可以使用 linestyle 参数来定义，简写为 `ls`
+type|marker|description
+:-:|:-:|:-:
+`solid`(default)|`'-'`|实线
+`dotted`|`':'`|点虚线
+`dashed`|`'--'`|破折线
+`dashdot`|`'-.'`|点划线
+`None`|`''`|不画线
+
+线的颜色可以使用 color 参数来定义，简写为 `c`
+
+颜色类型与 fmt 相同，也可自定义颜色，如`SeaGreen`，`#8FBC8F`
+
+线的宽度可以使用 linewidth 参数来定义，简写为 `lw`，值可以是浮点数，如：1、2.0、5.67 等
+```python
+>>> plt.plot(xpoints, y, ls = '-.', c = '#b4befe', lw = 4)
+>>> plt.show()
+```
+<img src="images/Figure_7.png" alt="Figure_7" width="50%">
+
+#### 轴标题与标签
+使用 `xlabel()` 和 `ylabel()` 方法来设置 x 轴和 y 轴的标签
+使用 `title()` 方法来设置标题
+以上三个方法均提供了 `loc` 参数来设置标签和标题的显示位置
+`xlabel` 与 `title` 可设置为 `left`, `right`, `center`(default)
+`ylabel` 可设置为 `bottom`, `top`, `center`(default)
+```python
+>>> x = np.arange(0,10)
+>>> y = x ** 2
+>>> plt.xlabel("x-axis", loc="left")
+>>> plt.ylabel("y-axis", loc="top")
+>>> plt.title("demo", loc="left")
+>>> plt.plot(x, y)
+>>> plt.show()
+```
+<img src="images/Figure_8.png" alt="Figure_8" width="50%">
+
+#### 网格线
+使用的 `grid()` 方法来设置图表中的网格线
+```python
+matplotlib.pyplot.grid(b=None, which='major', axis='both', )
+```
+* `b`：可选，默认为 None，可以设置布尔值，true 为显示网格线，false 为不显示，如果设置 `**kwargs` 参数，则值为 true
+* `which`：可选，可选值有 `'major'`(default)、`'minor'` 和 `'both'`，表示应用更改的网格线
+* `axis`：可选，设置显示哪个方向的网格线，可以是取 `'both'`(default)，`'x'` 或 `'y'`，分别表示两个方向，x 轴方向或 y 轴方向
+* `**kwargs`：可选，设置网格样式，可以是 `color='r'`, `linestyle='-'` 和 `linewidth=2`，分别表示网格线的颜色，样式和宽度
 ## Simple Plot
