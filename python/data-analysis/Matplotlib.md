@@ -28,7 +28,8 @@ plot([x], y, [fmt], [x2], y2, [fmt2], ..., **kwargs)
 >>> plt.plot(xpoints,ypoints)
 >>> plt.show()
 ```
-![Figure_1](images/Figure_1.png){width=50%}
+<img src="images/Figure_1.png" alt="Figure_1" width="50%">
+
 调用 `plt.show` 展示图像
 如果不指定 x 轴上的点，则 y 的值所对应的 x 默认为 `0, 1, 2, ..., N-1`
 ```python
@@ -36,7 +37,8 @@ plot([x], y, [fmt], [x2], y2, [fmt2], ..., **kwargs)
 >>> plt.plot(ypoints)
 >>> plt.show()
 ```
-![Figure_2](images/Figure_2.png){width=50%}
+<img src="images/Figure_2.png" alt="Figure_2" width="50%">
+
 绘制正弦和余弦图，参数中包含两对 **x, y** 值，第一对为 **x, y**，对应正弦函数；第二对为 **x, z**，对应余弦函数
 ```python
 >>> x = np.arange(0, 4*np.pi, 0.1)
@@ -45,7 +47,8 @@ plot([x], y, [fmt], [x2], y2, [fmt2], ..., **kwargs)
 >>> plt.plot(x,y,x,z)
 >>> plt.show()
 ```
-![Figure_3](images/Figure_3.png){width=50%}
+<img src="images/Figure_3.png" alt="Figure_3" width="50%">
+
 ### 绘图标记
 #### marker
 绘图过程如果我们想要给坐标自定义一些不一样的标记，就可以使用 plot() 方法的 `marker` 参数来定义
@@ -54,7 +57,8 @@ plot([x], y, [fmt], [x2], y2, [fmt2], ..., **kwargs)
 >>> plt.plot(x,y,x,z,marker = 'o')
 >>> plt.show()
 ```
-![Figure_4](images/Figure_4.png){width=50%}
+<img src="images/Figure_4.png" alt="Figure_4" width="50%">
+
 常用 `marker` 符号：
 marker|description|marker|description
 :-:|:-:|:-:|:-:
@@ -74,7 +78,8 @@ marker|description|marker|description
 >>> plt.plot(ypoints, marker = 'o', ms = 15, mfc = 'b', mec = 'r')
 >>> plt.show()
 ```
-![Figure_6](images/Figure_6.png){width=50%}
+<img src="images/Figure_6.png" alt="Figure_6" width="50%">
+
 #### fmt
 fmt 参数定义了基本格式，如标记、线条样式和颜色
 ```python
@@ -86,7 +91,8 @@ fmt = '[marker][line][color]'
 >>> plt.plot(ypoints, '*--c')
 >>> plt.show()
 ```
-![Figure_5](images/Figure_5.png){width=50%}
+<img src="images/Figure_5.png" alt="Figure_5" width="50%">
+
 线类型：
 marker|description
 :-:|:-:
