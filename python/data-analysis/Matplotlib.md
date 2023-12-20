@@ -156,4 +156,153 @@ matplotlib.pyplot.grid(b=None, which='major', axis='both', )
 * `which`：可选，可选值有 `'major'`(default)、`'minor'` 和 `'both'`，表示应用更改的网格线
 * `axis`：可选，设置显示哪个方向的网格线，可以是取 `'both'`(default)，`'x'` 或 `'y'`，分别表示两个方向，x 轴方向或 y 轴方向
 * `**kwargs`：可选，设置网格样式，可以是 `color='r'`, `linestyle='-'` 和 `linewidth=2`，分别表示网格线的颜色，样式和宽度
+### 绘制多图
+#### plt.subplot
+```python
+plt.subplot(nrows, ncols, index, **kwargs)
+plt.subplot(pos, **kwargs)
+plt.subplot(**kwargs)
+plt.subplot(ax)
+```
+以上函数将当前图窗分成 `nrows` 行和 `ncols` 列，然后按从左到右，从上到下的顺序以 `1...N` 对每个子区域进行编号，左上的子区域的编号为 1、右下的区域编号为 N，`index` 参数用来指定要在哪块区域创建坐标区，即绘图区域
+使用 `plt.suptitle` 为整幅图像添加标题
+```python
+>>> x = np.arange(0, 10, 0.5)
+>>> y = np.exp(x)
+>>> plt.subplot(1, 2, 1)    # divide the figure into 1 row and 2 cols and choose the No.1 area
+>>> plt.title("plot 1")     # title for subplot 1
+>>> plt.plot(x, y)          # draw
+>>> z = x**2
+>>> plt.subplot(1, 2, 2)
+>>> plt.title("plot 2")
+>>> plt.plot(x, z)
+>>> plt.suptitle("subplot demo")
+>>> plt.show()
+```
+<img src="images/Figure_9.png" alt="Figure_9" width="50%">
+
+#### plt.subplots
+```python
+plt.subplots(nrows=1, ncols=1, *, sharex=False, sharey=False, squeeze=True, subplot_kw=None, gridspec_kw=None, **fig_kw)
+```
+* `nrows`: 默认为 1，设置图表的行数
+* `ncols`: 默认为 1，设置图表的列数
+* `sharex`, `sharey`: 设置 x、y 轴是否共享属性，可设置为 `none` or `False`(default), `all` or `True`,  `row` or `col`。
+`False` or `none`: 每个子图的 x 轴或 y 轴都是独立的
+`True` or `all`：所有子图共享 x 轴或 y 轴
+`row`: 设置每个子图行共享一个 x 轴或 y 轴
+`col`：设置每个子图列共享一个 x 轴或 y 轴
+* `squeeze`: 布尔值，默认为 `True`，表示额外的维度从返回的 Axes(轴)对象中挤出，对于 N*1 或 1*N 个子图，返回一个 1 维数组，对于 N*M，N>1 和 M>1 返回一个 2 维数组。如果设置为 False，则不进行挤压操作，返回一个元素为 Axes 实例的2维数组，即使它最终是1x1
+* `subpllot_kw`: 可选，字典类型。把字典的关键字传递给 `add_subplot()` 来创建每个子图
+* `gridspec_kw`: 可选，字典类型。把字典的关键字传递给 `GridSpec` 构造函数创建子图放在网格里
+* `**fig_kw`: 把详细的关键字参数传给 `figure()` 函数
+
+函数返回值为一个二元组，分别表示图形（画窗）和子图对象（坐标区），可以在二元组返回的对象上进行绘图操作。
+```python
+fig, ax = plt.subplots()
+```
+与以下代码等价
+首先调用 `plt.figure()` 创建一个画窗对象，随后在该对象上添加一行一列一个(对应`(1, 1, 1)`)坐标区
+```python
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
+```
+#### Figure & Axes
+`axes` 是数据可视化的重要对象。当 `axes` 被添加到 `figure` 后，可以使用许多方法对视图信息进行添加与修改。
+<img src="images/anatomy.webp" alt="anatomy" width="70%">
+
+上图中，`axes` 对象通过 `ax = fig.subplots()` 创建。图像上的一切都能使用  `ax` 对象进行访问。 
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+fig, axs = plt.subplots(ncols=2, nrows=2, figsize=(3.5, 2.5),
+                        layout="constrained")
+# for each Axes, add an artist, in this case a nice label in the middle...
+for row in range(2):
+    for col in range(2):
+        axs[row, col].annotate(f'axs[{row}, {col}]', (0.5, 0.5),
+                            transform=axs[row, col].transAxes,
+                            ha='center', va='center', fontsize=18,
+                            color='darkgrey')
+fig.suptitle('plt.subplots()')
+```
+<img src="images/axes_intro-1.2x.png" alt="axes_intro" width="50%">
+
+在上述实例中，`subplots` 将图窗分为 2 x 2 的网格（grid），因此 `axs` 是一个 `Axes` 对象的 (2,2) 数组。数组中的每个元素都能独立的添加数据
+向 `Figure` 添加 `Axes` 的方法有许多：
+* `Figure.add_axes`: 需要手动指定位置与大小。`fig.add_axes([0, 0, 1, 1])` 以(0, 0)为左下角的位置添加宽和高均为1的对象。默认情况下，所有值为基于图窗的归一化值
+* `plt.subplots` & `Figure.subplots`
+##### plot
+`axes.Axes` 类提供了许多作图方法，如基础的 `axes.Axes.plot`:
+```python
+>>> fig, ax = plt.subplots(figsize=(4, 3))
+>>> t = np.arange(100)
+>>> x = np.cumsum(np.random.rand(100))
+>>> lines = ax.plot(t, x)
+>>> plt.show()
+```
+<img src="images/Figure_10.png" alt="Figure_10" width="50%">
+
+`plot` 返回由 `lines` 对象组成的列表
+> 几乎所有在 Matplotlib plot 中能交互的对象都被称为 `Artist`，并且是 `Aritst` 类的子类。如 `Figure`, `Axes`, `lines` 等
+
+##### labelling and annotation
+```python
+fig, ax = plt.subplots(figsize=(5, 3))
+t = np.arange(200)
+x = np.cumsum(np.random.randn(200))
+y = np.cumsum(np.random.randn(200))
+linesx = ax.plot(t, x, label='Random walk x')
+linesy = ax.plot(t, y, label='Random walk y')
+
+ax.set_xlabel('Time [s]')
+ax.set_ylabel('Distance [km]')
+ax.set_title('Random walk example')
+ax.legend()
+plt.show()
+```
+<img src="images/Figure_11.png" alt="Figure_11" width="50%">
+
+`ax.legend()` 用于显示图例，详情请参考<a herf="https://matplotlib.org/stable/users/explain/axes/legend_guide.html#legend-guide">Legend guide</a>
+文本同样可通过 `text` 和 `annotate` 方法添加，详见 <a herf="https://matplotlib.org/stable/users/explain/text/text_props.html#text-props">Text properties and layout</a> 与 <a herf="https://matplotlib.org/stable/users/explain/text/annotations.html#annotations">Annotations</a> 
+##### limits, scales and ticking
+可以通过 `set_xlim` 和 `set_ylim` 等方法对轴进行放缩
+```python
+fig, ax = plt.subplots(figsize=(4, 2.5), layout='constrained')
+np.random.seed(19680801)
+t = np.arange(200)
+x = 2**np.cumsum(np.random.randn(200))
+linesx = ax.plot(t, x)
+ax.set_yscale('log')
+ax.set_xlim([20, 180])
+```
+<img src="images/axes_intro-4.2x.png" alt="axes_intro-4.2x" width="50%">
+
+使用 `tick_params` 方法调整 tick 与 ticklabels，如下例将 x 轴标签放在上面，ticks 变红，ticklabels 变绿
+```python
+fig, ax = plt.subplots(figsize=(4, 2.5))
+ax.plot(np.arange(10))
+ax.tick_params(top=True, labeltop=True, color='red', axis='x',
+               labelcolor='green')
+```
+<img src="images/axes_intro-5.2x.png" alt="axes_intro-5.2x" width="50%">
+
+##### layout
+使用 `set_aspect` 方法调整数据区图像比例
+```python
+fig, axs = plt.subplots(ncols=2, figsize=(7, 2.5), layout='constrained')
+np.random.seed(19680801)
+t = np.arange(200)
+x = np.cumsum(np.random.randn(200))
+axs[0].plot(t, x)
+axs[0].set_title('aspect="auto"')
+
+axs[1].plot(t, x)
+axs[1].set_aspect(3)
+axs[1].set_title('aspect=3')
+```
+<img src="images/axes_intro-6.2x.png" alt="axes_intro-6.2x" width="50%">
+
+更多内容详见<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes">官方文档</a>
 ## Simple Plot
